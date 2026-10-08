@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ATF Mini App Prototype</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#050505;color:#fff;font-family:Arial,sans-serif}
+.app{max-width:430px;margin:auto;min-height:100vh;background:
+radial-gradient(circle at 50% 45%,rgba(255,180,0,.18),transparent 28%),
+linear-gradient(145deg,#090909,#211400 48%,#050505);padding-bottom:84px}
+header{padding:26px 20px 12px;text-align:left}.title{font-size:30px;font-weight:800}.sub{color:#aaa;margin-top:5px}
+.wallet{background:#099fe8;border:0;border-radius:30px;color:white;font-weight:800;padding:13px 18px;float:right;margin-top:-48px}
+.balance{text-align:center;padding:20px}.balance .num{font-size:38px;font-weight:900;color:#fff}.balance b{color:#ffd000}
+.pill{display:inline-block;border:1px solid #806b00;border-radius:22px;padding:10px 22px;color:#ddd;background:#12120d;margin:7px}
+.reward{margin:12px 25px;padding:22px;border-radius:35px;text-align:center;font-size:42px;font-weight:900;color:#00ff9d;background:rgba(0,30,15,.75);box-shadow:0 0 25px rgba(0,255,150,.15)}
+.coin{width:230px;height:230px;margin:30px auto;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:70px;font-weight:900;color:#17120a;background:radial-gradient(circle,#f8d66a,#9b6410 68%,#4d2c00);border:10px solid #d59b2a;box-shadow:0 0 35px rgba(255,190,20,.35)}
+.claim{display:block;width:calc(100% - 50px);margin:10px 25px;padding:18px;border:0;border-radius:24px;background:#ffbd00;color:#171000;font-size:21px;font-weight:900}
+nav{position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:auto;background:#050505;border-top:1px solid #292929;display:flex;justify-content:space-around;padding:10px 3px 12px}
+nav button{background:none;border:0;color:#999;font-weight:700;font-size:12px}.active{color:#ffd000!important}.ico{font-size:23px;display:block;margin-bottom:3px}
+.page{display:none}.page.show{display:block}.card{margin:14px 20px;padding:18px;border-radius:20px;background:rgba(20,20,25,.88);border:1px solid #24242b}.card h3{margin:0 0 8px}.go{float:right;background:#ffd000;border:0;border-radius:22px;padding:10px 20px;font-weight:800}
+input{width:100%;padding:14px;border-radius:14px;border:1px solid #555;background:#111;color:#fff;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="app">
+<section id="mine" class="page show">
+<header><div class="title">ATF</div><div class="sub">Miner • Level 1</div><button class="wallet" onclick="alert('Wallet connection will be added in the next version.')">Connect Wallet</button></header>
+<div class="balance"><div class="num" id="bal">55.1280 <b>ATF</b></div><div class="pill">Pool Wallet: <b id="pool">55.1280 ATF</b></div></div>
+<div class="reward" id="reward">+0.0000</div>
+<div class="coin" onclick="mine()">ATF</div>
+<button class="claim" onclick="claim()">CLAIM</button>
+</section>
+
+<section id="tasks" class="page">
+<header><div class="title">Earn Rewards</div><div class="sub">Complete tasks to earn ATF</div></header>
+<div class="card"><h3>YouTube Like & Comment</h3><p>Reward: +1 ATF</p><button class="go" onclick="task(1)">GO</button></div>
+<div class="card"><h3>Visit Website</h3><p>Reward: +1 ATF</p><button class="go" onclick="task(1)">GO</button></div>
+<div class="card"><h3>Daily Check-in</h3><p>Reward: +2 ATF</p><button class="go" onclick="task(2)">CLAIM</button></div>
+</section>
+
+<section id="miners" class="page">
+<header><div class="title">Miner Store</div><div class="sub">Upgrade your mining speed</div></header>
+<div class="card"><h3>Level 1</h3><p>Speed: 0.20 ATF/min</p><button class="go">ACTIVE</button></div>
+<div class="card"><h3>Level 2</h3><p>Speed: 0.40 ATF/min</p><button class="go" onclick="alert('Requires 100 ATF in the real version.')">NEED 100 ATF</button></div>
+</section>
+
+<section id="friends" class="page">
+<header><div class="title">Friends</div><div class="sub">Invite friends and earn rewards</div></header>
+<div class="card"><h3>Your Invite Link</h3><input id="ref" value="https://t.me/YourBot?start=123456" readonly><button class="go" onclick="navigator.clipboard?.writeText(ref.value);alert('Invite link copied')">COPY</button></div>
+<div class="card"><h3>Your Referrals</h3><p>0 successful • 0 total</p></div>
+<div class="card"><h3>Referral Reward</h3><p>+100 ATF each</p></div>
+</section>
+
+<section id="profile" class="page">
+<header><div class="title">Profile</div><div class="sub">Your account</div></header>
+<div class="card"><h3>User ID</h3><p>Telegram user ID will appear here</p></div>
+<div class="card"><h3>Assets</h3><p id="asset">55.1280 ATF</p></div>
+<div class="card"><h3>Wallet</h3><p>Connect your wallet to enable wallet features.</p></div>
+</section>
+
+<nav>
+<button class="active" onclick="show('mine',this)"><span class="ico">⛏️</span>Mine</button>
+<button onclick="show('tasks',this)"><span class="ico">📝</span>Tasks</button>
+<button onclick="show('miners',this)"><span class="ico">⚡</span>Miners</button>
+<button onclick="show('friends',this)"><span class="ico">👥</span>Friends</button>
+<button onclick="show('profile',this)"><span class="ico">👤</span>Profile</button>
+</nav>
+</div>
+<script>
+let balance=55.1280, pending=0;
+function mine(){pending+=0.1;document.getElementById('reward').textContent='+'+pending.toFixed(4); }
+function claim(){balance+=pending;pending=0;update();alert('Claimed successfully in prototype');}
+function task(n){balance+=n;update();alert('Task reward added in prototype');}
+function update(){document.getElementById('bal').innerHTML=balance.toFixed(4)+' <b>ATF</b>';document.getElementById('pool').textContent=balance.toFixed(4)+' ATF';document.getElementById('asset').textContent=balance.toFixed(4)+' ATF';document.getElementById('reward').textContent='+0.0000';}
+function show(id,btn){document.querySelectorAll('.page').forEach(x=>x.classList.remove('show'));document.getElementById(id).classList.add('show');document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));btn.classList.add('active');window.scrollTo(0,0);}
+</script>
+</body>
+</html>
